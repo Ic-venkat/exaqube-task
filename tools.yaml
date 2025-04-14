@@ -1,0 +1,66 @@
+sources:
+  my-pg-source:
+    kind: postgres
+    host: 127.0.0.1
+    port: 5432
+    database: toolbox_db
+    user: toolbox_user
+    password: my-password
+tools:
+  search-shipping-lines-by-equipment:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Search for shipping lines based on equipment type.
+    parameters:
+      - name: equipment_type
+        type: string
+        description: The equipment type to search for (e.g., 20’ Dry).
+    statement: SELECT * FROM exaqube_esl WHERE "Equipment Type" ILIKE '%' || $1 || '%' limit 10;
+
+  search-shipping-lines-by-country:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Search for shipping lines based on country.
+    parameters:
+      - name: country
+        type: string
+        description: The country of the shipping line.
+    statement: SELECT * FROM exaqube_esl WHERE country ILIKE '%' || $1 || '%' limit 10;
+
+  search-shipping-lines-by-port:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Search for shipping lines based on port.
+    parameters:
+      - name: port
+        type: string
+        description: The port of the shipping line.
+    statement: SELECT * FROM exaqube_esl WHERE port ILIKE '%' || $1 || '%' limit 10;
+
+  search-shipping-lines-by-free-time:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Search for shipping lines based on free time.
+    parameters:
+      - name: free_time
+        type: string
+        description: The free time (e.g., 14 Calendar Days) for the shipping line.
+    statement: SELECT * FROM exaqube_esl WHERE "Free Time" ILIKE '%' || $1 || '%' limit 10;
+
+  search-shipping-lines-by-currency:
+    kind: postgres-sql
+    source: my-pg-source
+    description: Search for shipping lines based on currency.
+    parameters:
+      - name: currency
+        type: string
+        description: The currency used by the shipping line.
+    statement: SELECT * FROM exaqube_esl WHERE Currency ILIKE '%' || $1 || '%' limit 10;
+
+toolsets:
+  my-toolset:
+    - search-shipping-lines-by-equipment
+    - search-shipping-lines-by-country
+    - search-shipping-lines-by-port
+    - search-shipping-lines-by-free-time
+    - search-shipping-lines-by-currency

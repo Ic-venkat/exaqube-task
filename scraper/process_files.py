@@ -1,6 +1,18 @@
 import os
 import pandas as pd
 from sqlalchemy import create_engine
+from dotenv import load_dotenv
+
+
+# Load environment variables from .env file in the root directory
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=dotenv_path)
+
+# Check if the .env file was loaded correctly
+if not os.path.exists(dotenv_path):
+    print(f"❌ .env file not found at {dotenv_path}")
+else:
+    print(f"✅ .env file found at {dotenv_path}")
 
 class CSVProcessor:
     def __init__(self, root_folder):
@@ -58,7 +70,13 @@ class DataPipeline:
 if __name__ == "__main__":
     root_folder = 'downloads'  # Adjust this as needed
     table_name = 'exaqube_esl'
-    db_url = 'postgresql+psycopg2://venkat:postgres@localhost:5432/postgres'
-    
+
+    # Fetch database URL from environment variables
+    db_url = (
+        f"postgresql+psycopg2://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@"
+        f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+    )
+    print(db_url)
+
     pipeline = DataPipeline(root_folder, table_name, db_url)
     pipeline.run()
